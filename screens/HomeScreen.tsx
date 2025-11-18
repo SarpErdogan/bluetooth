@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, FlatList, PermissionsAndroid, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useBluetoothStore } from '../store/bluetoothStore';
+import { useBluetoothStore } from '../src/bluetooth/bluetooth';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../App';
 

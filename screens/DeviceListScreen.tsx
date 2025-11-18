@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Button, FlatList, Text } from 'react-native';
-import { useBluetoothStore } from '../store/bluetoothStore';
+import { useBluetoothStore } from '../src/bluetooth/bluetooth';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../App';

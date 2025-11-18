@@ -9,8 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-navigation/native": "^7.1.18",
-    "@react-navigation/stack": "^7.4.10",
+    "@react-navigation/native": "^7.1.20",
+    "@react-navigation/stack": "^7.6.4",
     "eas-cli": "^16.24.1",
     "expo": "~54.0.13",
     "expo-dev-client": "~6.0.15",
@@ -18,7 +18,9 @@
     "react": "19.1.0",
     "react-native": "0.81.4",
     "react-native-bluetooth-classic": "^1.73.0-rc.15",
-    "react-native-safe-area-context": "^5.6.1",
+    "react-native-gesture-handler": "^2.29.1",
+    "react-native-reanimated": "^4.1.5",
+    "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "zustand": "^5.0.8"
   },

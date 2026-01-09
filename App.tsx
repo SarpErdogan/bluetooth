@@ -1,73 +1,88 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  Button,
   TextInput,
+  Button,
+  Alert,
   StyleSheet,
-} from "react-native";
-import { useBluetoothStore } from "./src/bluetoothStore";
+} from 'react-native';
 
-const App: React.FC = () => {
-  const { connected, connectToPi, sendMessage } = useBluetoothStore();
-  const [text, setText] = useState<string>("");
+import BluetoothClassic from 'react-native-bluetooth-classic';
 
-  const handleConnect = async () => {
+export default function App() {
+  const [device, setDevice] = useState<any>(null);
+  const [text, setText] = useState('');
+
+  // 📌 Daha önce eşleştirilmiş cihaza bağlan
+  const connect = async () => {
     try {
-      await connectToPi();
-    } catch (err: any) {
-      alert(err.message);
+      const bonded = await BluetoothClassic.getBondedDevices();
+
+      // Raspberry Pi adını birebir yaz
+      const pi = bonded.find(d => d.name === 'raspberrypi');
+
+      if (!pi) {
+        Alert.alert('Hata', 'Raspberry Pi bulunamadı');
+        return;
+      }
+
+      const connected = await pi.connect();
+      setDevice(pi);
+
+      Alert.alert('Bağlandı', 'Raspberry Pi ile bağlantı kuruldu');
+    } catch (e) {
+      Alert.alert('Bağlantı hatası', String(e));
     }
   };
 
-  const handleSend = async () => {
+  // 📤 Metni gönder
+  const sendText = async () => {
+    if (!device) {
+      Alert.alert('Hata', 'Önce bağlan');
+      return;
+    }
+
     try {
-      await sendMessage(text);
-      setText("");
-    } catch (err: any) {
-      alert(err.message);
+      await device.write(text + '\n'); // 🔴 satır sonu önemli
+      setText('');
+    } catch (e) {
+      Alert.alert('Gönderme hatası', String(e));
     }
   };
 
   return (
     <View style={styles.container}>
-      <Button title="Raspberry Pi'ye Bağlan" onPress={handleConnect} />
+      <Text style={styles.title}>Bluetooth Test</Text>
 
-      <Text style={styles.status}>
-        Durum: {connected ? "Bağlı" : "Bağlı değil"}
-      </Text>
+      <Button title="Cihaza Bağlan" onPress={connect} />
 
       <TextInput
+        style={styles.input}
+        placeholder="Gönderilecek metin"
         value={text}
         onChangeText={setText}
-        placeholder="Gönderilecek mesaj"
-        style={styles.input}
       />
 
-      <Button
-        title="Mesaj Gönder"
-        onPress={handleSend}
-        disabled={!connected || !text}
-      />
+      <Button title="Gönder" onPress={sendText} />
     </View>
   );
-};
-
-export default App;
+}
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    marginTop: 50,
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
   },
-  status: {
-    marginVertical: 15,
-    fontSize: 16,
+  title: {
+    fontSize: 22,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#333",
     padding: 10,
-    marginBottom: 10,
+    marginVertical: 20,
   },
 });
